@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Heebo } from "next/font/google";
 import "./globals.css";
-import { Provider } from "@/components/ui/Provider";
+import { Provider } from "@/components/ui/provider";
 
 const heebo = Heebo({
   variable: "--font-heebo",
