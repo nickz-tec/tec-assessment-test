@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Heebo } from "next/font/google";
+import { Roboto } from "next/font/google";
 import "./globals.css";
 import { Provider } from "@/components/ui/provider";
 
-const heebo = Heebo({
-  variable: "--font-heebo",
+const roboto = Roboto({
+  variable: "--font-roboto",
   subsets: ["latin"],
 });
 
@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html className={heebo.variable} lang="en" suppressHydrationWarning>
+    <html className={roboto.variable} lang="en" suppressHydrationWarning>
       <body>
         <Provider>{children}</Provider>
       </body>

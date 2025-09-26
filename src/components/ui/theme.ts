@@ -17,6 +17,7 @@ export const config = defineConfig({
         },
 
         gray: {
+          200: { value: "#E4E4E7" },
           400: {
             value: "#A1A1AA",
           },
@@ -33,10 +34,10 @@ export const config = defineConfig({
       },
       fonts: {
         heading: {
-          value: "var(--font-heebo)",
+          value: "var(--font-roboto)",
         },
         body: {
-          value: "var(--font-heebo)",
+          value: "var(--font-roboto)",
         },
       },
     },
