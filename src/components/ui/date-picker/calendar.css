@@ -1,0 +1,95 @@
+.rdp-root {
+  --rdp-today-color: var(--chakra-colors-fg);
+}
+
+.rdp-months {
+  max-width: none;
+}
+
+.rdp-month {
+  width: 100%;
+}
+
+/* Weekday table header */
+.rdp-weekdays {
+  display: flex;
+}
+
+.rdp-weekday {
+  flex: 1;
+  font-size: 14px;
+  color: var(--chakra-colors-fg-subtle);
+  opacity: 1;
+  font-weight: 400;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Calendar table */
+.rdp-month_grid {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Calendar row */
+.rdp-week {
+  display: flex;
+}
+
+/* Calendar day */
+.rdp-day {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1;
+  padding: 0; /* Reset padding on the cell */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Day button */
+.rdp-day_button {
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+  border-radius: 0;
+  border-width: 1px;
+  outline: none;
+}
+
+.rdp-day_button:hover {
+  background-color: var(--chakra-colors-gray-100);
+}
+
+.rdp-today:not(.rdp-selected) .rdp-day_button {
+  border: 1px solid var(--chakra-colors-navy-500);
+}
+
+.rdp-focused:not(.rdp-selected) {
+  background-color: var(--chakra-colors-gray-100);
+}
+
+.rdp-disabled {
+  color: var(--chakra-colors-fg-subtle);
+  opacity: 1;
+}
+
+.rdp-disabled .rdp-day_button {
+  cursor: not-allowed;
+}
+
+.rdp-selected {
+  font-weight: 400;
+}
+
+.rdp-selected .rdp-day_button {
+  border: none;
+  background-color: var(--chakra-colors-blue-500);
+  color: var(--chakra-colors-white);
+}
