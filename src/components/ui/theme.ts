@@ -15,8 +15,8 @@ export const config = defineConfig({
           },
           500: { value: "#256BA2" },
         },
-
         gray: {
+          100: { value: "#F4F4F5" },
           200: { value: "#E4E4E7" },
           400: {
             value: "#A1A1AA",
@@ -55,6 +55,9 @@ export const config = defineConfig({
           inverted: { value: "{colors.white}" },
           muted: { value: "{colors.gray.600}" },
           subtle: { value: "{colors.gray.400}" },
+        },
+        border: {
+          DEFAULT: { value: "{colors.gray.200}" },
         },
         bg: {
           blue: {
