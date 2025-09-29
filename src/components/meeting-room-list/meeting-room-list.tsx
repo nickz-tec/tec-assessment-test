@@ -59,6 +59,10 @@ export const MeetingRoomList = ({
       );
     }
 
+    if (filterValues.isVC) {
+      urlParams.set("is_vc", "true");
+    }
+
     window.history.replaceState({}, "", `/?${urlParams.toString()}`);
 
     // Fetch meeting rooms
@@ -70,6 +74,9 @@ export const MeetingRoomList = ({
       apiParams.set("endDate", endDate);
       apiParams.set("seats", filterValues.seats.toString());
       apiParams.set("cityCode", filterValues.cityCode);
+      if (filterValues.isVC) {
+        apiParams.set("isVC", "true");
+      }
 
       const response = await fetch(
         `/api/meeting-rooms?${apiParams.toString()}`

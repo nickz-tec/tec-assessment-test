@@ -7,6 +7,7 @@ export async function GET(request: Request) {
   const startDate = searchParams.get("startDate");
   const endDate = searchParams.get("endDate");
   const seats = searchParams.get("seats");
+  const isVC = searchParams.get("isVC");
 
   if (!startDate || !endDate || !seats || !cityCode) {
     return new Response("Missing required parameters", { status: 400 });

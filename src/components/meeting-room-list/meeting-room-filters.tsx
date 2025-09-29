@@ -3,7 +3,7 @@
 import { DatePicker } from "../ui/date-picker/date-picker";
 import { Select } from "../ui/select";
 
-import { Flex } from "@chakra-ui/react";
+import { Flex, Box } from "@chakra-ui/react";
 import { Combobox, ComboboxItem } from "../ui/combobox";
 import { FilterValues } from "@/lib/types";
 import {
@@ -15,6 +15,7 @@ import { seatsOptions } from "./seats-options";
 import { isBefore, isAfter, set, startOfDay, addDays } from "date-fns";
 import { MapPinIcon, UsersIcon } from "lucide-react";
 import { Field } from "../ui/field";
+import { Checkbox } from "../ui/checkbox";
 
 export const MeetingRoomFilters = ({
   nextAvailableSlot,
@@ -103,6 +104,13 @@ export const MeetingRoomFilters = ({
     }));
   };
 
+  const handleVCChange = (isVC: boolean) => {
+    updateFilter((old) => ({
+      ...old,
+      isVC,
+    }));
+  };
+
   const today = new Date();
 
   const disabledBefore = hasCutOffTimePassed(today)
@@ -110,52 +118,59 @@ export const MeetingRoomFilters = ({
     : today;
 
   return (
-    <Flex gap={2}>
-      <Field label="Date">
-        <DatePicker
-          date={values.startDate}
-          onSelect={handleDayChange}
-          disabledBefore={disabledBefore}
-        />
-      </Field>
+    <Box>
+      <Flex gap={2}>
+        <Field label="Date">
+          <DatePicker
+            date={values.startDate}
+            onSelect={handleDayChange}
+            disabledBefore={disabledBefore}
+          />
+        </Field>
 
-      <Field label="Start Time">
-        <Select
-          items={startTimeOptions}
-          value={values.startDate.toISOString()}
-          onValueChange={handleStartTimeChange}
-          placeholder="Select time"
-        />
-      </Field>
-      <Field label="End Time">
-        <Select
-          items={endTimeOptions}
-          value={values.endDate.toISOString()}
-          onValueChange={handleEndTimeChange}
-          placeholder="Select time"
-        />
-      </Field>
-      <Field label="Seats">
-        <Select
-          items={seatsOptions}
-          value={values.seats.toString()}
-          onValueChange={handleSeatsChange}
-          placeholder="Select seats"
-          icon={<UsersIcon />}
-        />
-      </Field>
-      {/* TODO: Add fuzzy search */}
+        <Field label="Start Time">
+          <Select
+            items={startTimeOptions}
+            value={values.startDate.toISOString()}
+            onValueChange={handleStartTimeChange}
+            placeholder="Select time"
+          />
+        </Field>
+        <Field label="End Time">
+          <Select
+            items={endTimeOptions}
+            value={values.endDate.toISOString()}
+            onValueChange={handleEndTimeChange}
+            placeholder="Select time"
+          />
+        </Field>
+        <Field label="Seats">
+          <Select
+            items={seatsOptions}
+            value={values.seats.toString()}
+            onValueChange={handleSeatsChange}
+            placeholder="Select seats"
+            icon={<UsersIcon />}
+          />
+        </Field>
+        {/* TODO: Add fuzzy search */}
 
-      <Field label="City">
-        <Combobox
-          items={cities}
-          value={values.cityCode}
-          onValueChange={handleCityChange}
-          placeholder="Select city"
-          groupSort={(a, b) => a.localeCompare(b)}
-          icon={<MapPinIcon />}
-        />
-      </Field>
-    </Flex>
+        <Field label="City">
+          <Combobox
+            items={cities}
+            value={values.cityCode}
+            onValueChange={handleCityChange}
+            placeholder="Select city"
+            groupSort={(a, b) => a.localeCompare(b)}
+            icon={<MapPinIcon />}
+          />
+        </Field>
+      </Flex>
+      <Checkbox
+        label="Video Conference (Additional cost may apply)"
+        checked={values.isVC}
+        onCheckedChange={handleVCChange}
+      />
+    </Box>
   );
 };

@@ -102,6 +102,10 @@ export const validateSearchParams = (
     v.cityCode = city.code;
   }
 
+  if (params.is_vc === "true" || params.is_vc === "false") {
+    v.isVC = params.is_vc === "true";
+  }
+
   return v;
 };
 
@@ -124,6 +128,7 @@ export const createDefaultValues = (
     endDate,
     seats: 1,
     cityCode,
+    isVC: false,
   };
 };
 
