@@ -1,4 +1,10 @@
-import { GetCitiesResponse } from "./tec-api-types";
+"use server";
+
+import {
+  GetCitiesResponse,
+  GetRoomAvailabilitiesParams,
+  GetRoomAvailabilitiesResponse,
+} from "./tec-api-types";
 
 export async function callApi<T>(
   endpoint: string,
@@ -8,7 +14,7 @@ export async function callApi<T>(
     throw new Error("TEC_API_BASE_URL or TEC_API_ACCESS_KEY is not set");
   }
 
-  const apiBaseUrl = `${process.env.TEC_API_BASE_URL}/core-api/api/v1`;
+  const apiBaseUrl = `${process.env.TEC_API_BASE_URL}`;
   const apiKey = process.env.TEC_API_ACCESS_KEY || "";
 
   const headers = {
@@ -30,7 +36,17 @@ export async function callApi<T>(
 }
 
 const getCities = async () => {
-  return await callApi<GetCitiesResponse>("/cities?pageSize=100");
+  return await callApi<GetCitiesResponse>(
+    "/core-api/api/v1/cities?pageSize=100"
+  );
 };
 
-export { getCities };
+const getRoomAvailabilities = async (params: GetRoomAvailabilitiesParams) => {
+  const queryParams = new URLSearchParams(params);
+
+  return await callApi<GetRoomAvailabilitiesResponse>(
+    `/core-api-me/api/v1/meetingrooms/availabilities?${queryParams.toString()}`
+  );
+};
+
+export { getCities, getRoomAvailabilities };

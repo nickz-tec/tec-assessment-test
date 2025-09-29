@@ -47,3 +47,17 @@ export type GetCitiesResponse = {
   isFirstPage: boolean;
   isLastPage: boolean;
 };
+
+export type GetRoomAvailabilitiesParams = {
+  startDate: string;
+  endDate: string;
+  cityCode: string;
+};
+
+export type GetRoomAvailabilitiesResponse = {
+  roomCode: string;
+  isAvailable: boolean;
+  isWithinOfficeHour: boolean;
+  isPast: boolean;
+  nextAvailabilities: unknown[];
+}[];
