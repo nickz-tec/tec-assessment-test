@@ -55,7 +55,7 @@ export const Combobox = ({
       }}
     >
       <Popover.Trigger asChild>
-        <DropdownTrigger isOpen={open} w={"200px"} icon={icon}>
+        <DropdownTrigger isOpen={open} w={"100%"} icon={icon}>
           {selectedItem?.label || placeholder}
         </DropdownTrigger>
       </Popover.Trigger>

@@ -36,7 +36,7 @@ export const DatePicker = ({
       }}
     >
       <Popover.Trigger asChild>
-        <DropdownTrigger isOpen={open} w={"200px"} icon={<CalendarIcon />}>
+        <DropdownTrigger isOpen={open} w="100%" icon={<CalendarIcon />}>
           {date ? (
             format(date, "yyyy-MM-dd")
           ) : (
