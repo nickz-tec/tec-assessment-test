@@ -8,12 +8,25 @@ import {
   isValid,
   isBefore,
   format,
+  isSameDay,
 } from "date-fns";
 
 import { FilterValues, FilterSearchParams } from "./types";
 
 const CUTOFF_HOUR = 18; // 6pm
 export const availableSeats = ["1", "5", "9", "13", "17"];
+
+export const generateTimeSlots = (start: Date, interval: number): Date[] => {
+  const slots: Date[] = [];
+  const current = new Date(start);
+
+  while (isSameDay(current, start)) {
+    slots.push(new Date(current));
+    current.setMinutes(current.getMinutes() + interval);
+  }
+
+  return slots;
+};
 
 export const getNextAvailableSlot = () => {
   const now = new Date();
@@ -87,6 +100,10 @@ export const validateSearchParams = (
   return v;
 };
 
-export const createDateParam = (date: Date) => {
+export const createFilterDateString = (date: Date) => {
   return format(date, "yyyy-MM-dd'T'HH:mm:ss");
+};
+
+export const createTimeString = (date: string | Date): string => {
+  return format(date, "HH:mm");
 };

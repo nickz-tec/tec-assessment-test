@@ -5,7 +5,8 @@ import { MeetingRoomFilters } from "./meeting-room-filters";
 import { FilterValues } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { GetRoomAvailabilitiesResponse } from "@/server/tec-api-types";
-import { format } from "date-fns";
+import * as tecApi from "@/server/tec-api-client";
+import { createFilterDateString } from "@/lib/filters";
 
 type Props = {
   cities: {
@@ -23,8 +24,8 @@ export const MeetingRoomList = ({
   initialValue,
 }: Props) => {
   const [filterValues, setFilterValues] = useState(initialValue);
-
-  useEffect(() => {}, [filterValues]);
+  const [meetingRooms, setMeetingRooms] =
+    useState<GetRoomAvailabilitiesResponse>([]);
 
   const cityOptions = cities.map((city) => ({
     label: city.name,
@@ -32,39 +33,43 @@ export const MeetingRoomList = ({
     group: city.region,
   }));
 
-  const [meetingRooms, setMeetingRooms] =
-    useState<GetRoomAvailabilitiesResponse>([]);
-
   useEffect(() => {
+    const startDate = createFilterDateString(filterValues.startDate);
+    const endDate = createFilterDateString(filterValues.endDate);
+
+    // Sync filter values with URL search params
+    const newParams = new URLSearchParams();
+    newParams.set("start_date", startDate);
+    newParams.set("end_date", endDate);
+    newParams.set("seats", filterValues.seats.toString());
+    newParams.set("city", filterValues.city);
+    window.history.replaceState({}, "", `/?${newParams.toString()}`);
+
+    // Fetch meeting rooms
     const fetchMeetingRooms = async () => {
-      const params = new URLSearchParams();
+      setMeetingRooms([]);
 
-      params.set(
-        "startDate",
-        format(initialValue.startDate, "yyyy-MM-dd'T'HH:mm:ss")
-      );
-      params.set(
-        "endDate",
-        format(initialValue.endDate, "yyyy-MM-dd'T'HH:mm:ss")
-      );
-      params.set("seats", initialValue.seats.toString());
-      params.set("cityCode", "HKG");
-
-      const response = await fetch(`/api/meeting-rooms?${params.toString()}`);
-      const data = await response.json();
-      setMeetingRooms(data);
+      const response = await tecApi.getRoomAvailabilities({
+        startDate,
+        endDate,
+        // TODO: Map city name to city code
+        cityCode: "HKG",
+      });
+      setMeetingRooms(response);
     };
 
     fetchMeetingRooms();
-  }, [initialValue]);
+  }, [filterValues]);
 
   return (
     <Box>
       <MeetingRoomFilters
         cities={cityOptions}
         nextAvailableSlot={nextAvailableSlot}
-        initialValue={initialValue}
+        values={filterValues}
+        updateFilter={setFilterValues}
       />
+
       {meetingRooms.map((meetingRoom) => (
         <Box key={meetingRoom.roomCode}>
           <Text>{meetingRoom.roomCode}</Text>

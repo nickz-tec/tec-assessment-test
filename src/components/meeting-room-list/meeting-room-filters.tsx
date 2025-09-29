@@ -1,111 +1,125 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { DatePicker } from "../ui/date-picker/date-picker";
 import { Select } from "../ui/select";
-import {
-  generateTimeStrings,
-  createTimeString,
-  isBefore,
-  isAfter,
-} from "@/lib/utils/time-string";
+
 import { Flex } from "@chakra-ui/react";
-import { format } from "date-fns";
 import { Combobox, ComboboxItem } from "../ui/combobox";
 import { FilterValues } from "@/lib/types";
+import { createTimeString, generateTimeSlots } from "@/lib/filters";
 import { seatsOptions } from "./seats-options";
+import { isBefore, isAfter, set } from "date-fns";
 
 export const MeetingRoomFilters = ({
   nextAvailableSlot,
-  initialValue,
+  values,
   cities,
+  updateFilter,
 }: {
   nextAvailableSlot: Date;
   cities: ComboboxItem[];
-  initialValue: FilterValues;
+  values: FilterValues;
+  updateFilter: (setter: (old: FilterValues) => FilterValues) => void;
 }) => {
-  const [day, setDay] = useState(initialValue.startDate);
-  const [startTime, setStartTime] = useState(
-    createTimeString(initialValue.startDate)
-  );
-  const [endTime, setEndTime] = useState(
-    createTimeString(initialValue.endDate)
-  );
+  const slots = generateTimeSlots(nextAvailableSlot, 30);
 
-  const [seats, setSeats] = useState(initialValue.seats.toString());
-  const [city, setCity] = useState(initialValue.city);
-
-  const timeStrings = generateTimeStrings(nextAvailableSlot, 30);
-
-  const availableTimeSlots = timeStrings.map((time) => ({
-    label: time,
-    value: time,
+  const availableTimeSlots = slots.map((time) => ({
+    label: createTimeString(time),
+    value: time.toISOString(),
   }));
 
   const startTimeOptions = availableTimeSlots.slice(0, -1);
 
   const endTimeOptions = availableTimeSlots.map((time) => ({
     ...time,
-    disabled: isBefore(time.value, startTime),
+    disabled: !isAfter(time.value, values.startDate),
   }));
 
-  useEffect(() => {
-    const [startHour, startMinute] = startTime.split(":");
-    const [endHour, endMinute] = endTime.split(":");
-    const startDate = new Date(day).setHours(
-      Number(startHour),
-      Number(startMinute)
-    );
-    const endDate = new Date(day).setHours(Number(endHour), Number(endMinute));
-
-    const newParams = new URLSearchParams();
-    newParams.set("start_date", format(startDate, "yyyy-MM-dd'T'HH:mm:ss"));
-    newParams.set("end_date", format(endDate, "yyyy-MM-dd'T'HH:mm:ss"));
-    newParams.set("seats", seats);
-    newParams.set("city", city);
-    window.history.replaceState({}, "", `/?${newParams.toString()}`);
-  }, [day, startTime, endTime, seats, city]);
-
   const handleStartTimeChange = (time: string) => {
-    if (isAfter(time, endTime)) {
-      const currentIndex = timeStrings.findIndex((t) => t === time);
-      const nextSlotIndex = currentIndex + 1;
+    if (!isBefore(time, values.endDate)) {
+      const nextSlotIndex = slots.findIndex((t) => isAfter(t, time));
 
-      // Ensure we don't go past the last available time slot.
-      if (nextSlotIndex < timeStrings.length) {
-        setEndTime(timeStrings[nextSlotIndex]);
+      if (nextSlotIndex < slots.length) {
+        updateFilter((old) => ({
+          ...old,
+          endDate: new Date(slots[nextSlotIndex]),
+        }));
       }
     }
 
-    setStartTime(time);
+    updateFilter((old) => ({
+      ...old,
+      startDate: new Date(time),
+    }));
+  };
+
+  const handleDayChange = (day: Date) => {
+    const year = day.getFullYear();
+    const month = day.getMonth();
+    const date = day.getDate();
+
+    updateFilter((old) => ({
+      ...old,
+      startDate: set(old.startDate, {
+        year,
+        month,
+        date,
+      }),
+      endDate: set(old.endDate, {
+        year,
+        month,
+        date,
+      }),
+    }));
+  };
+
+  const handleEndTimeChange = (time: string) => {
+    updateFilter((old) => ({
+      ...old,
+      endDate: new Date(time),
+    }));
+  };
+
+  const handleSeatsChange = (seats: string) => {
+    updateFilter((old) => ({
+      ...old,
+      seats: Number(seats),
+    }));
+  };
+
+  const handleCityChange = (city: string) => {
+    updateFilter((old) => ({
+      ...old,
+      city,
+    }));
   };
 
   return (
     <Flex gap={2}>
-      <DatePicker date={day} onSelect={setDay} />
+      <DatePicker date={values.startDate} onSelect={handleDayChange} />
       <Select
         items={startTimeOptions}
-        value={startTime}
+        value={values.startDate.toISOString()}
         onValueChange={handleStartTimeChange}
         placeholder="Select time"
       />
       <Select
         items={endTimeOptions}
-        value={endTime}
-        onValueChange={setEndTime}
+        value={values.endDate.toISOString()}
+        onValueChange={handleEndTimeChange}
         placeholder="Select time"
       />
       <Select
         items={seatsOptions}
-        value={seats}
-        onValueChange={setSeats}
+        value={values.seats.toString()}
+        onValueChange={handleSeatsChange}
         placeholder="Select seats"
       />
       {/* TODO: Add fuzzy search */}
       <Combobox
         items={cities}
-        value={city}
-        onValueChange={setCity}
+        value={values.city}
+        onValueChange={handleCityChange}
         placeholder="Select city"
         groupSort={(a, b) => a.localeCompare(b)}
       />
