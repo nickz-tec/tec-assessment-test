@@ -9,6 +9,7 @@ import {
   isBefore,
   format,
   isSameDay,
+  isToday,
 } from "date-fns";
 
 import { FilterValues, FilterSearchParams } from "./types";
@@ -98,6 +99,26 @@ export const validateSearchParams = (
   }
 
   return v;
+};
+
+// Same day: default to a 1-hour window two hours from now;
+// Next day: defaults to a 9–10 a.m.
+export const createDefaultValues = (nextAvailableSlot: Date): FilterValues => {
+  const startDate = isToday(nextAvailableSlot)
+    ? addHours(nextAvailableSlot, 2)
+    : addHours(nextAvailableSlot, 9);
+
+  const endDate = isToday(nextAvailableSlot)
+    ? addHours(nextAvailableSlot, 3)
+    : addHours(nextAvailableSlot, 10);
+
+  return {
+    startDate,
+    endDate,
+    seats: 1,
+    // TODO: Set default city from request
+    city: "hong-kong",
+  };
 };
 
 export const createFilterDateString = (date: Date) => {

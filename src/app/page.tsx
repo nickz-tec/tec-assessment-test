@@ -1,7 +1,10 @@
 import { Box } from "@chakra-ui/react";
 import * as tecApi from "@/server/tec-api-client";
-import { getNextAvailableSlot, validateSearchParams } from "@/lib/filters";
-import { addHours } from "date-fns";
+import {
+  createDefaultValues,
+  getNextAvailableSlot,
+  validateSearchParams,
+} from "@/lib/filters";
 import { availableSeats } from "@/lib/filters";
 import { FilterSearchParams } from "@/lib/types";
 import { MeetingRoomList } from "@/components/meeting-room-list/meeting-room-list";
@@ -23,13 +26,7 @@ const Home = async ({
     seats: availableSeats,
   });
 
-  const defaultValues = {
-    startDate: addHours(nextAvailableSlot, 2),
-    endDate: addHours(nextAvailableSlot, 3),
-    seats: 1,
-    // TODO: Set default city from request
-    city: "hong-kong",
-  };
+  const defaultValues = createDefaultValues(nextAvailableSlot);
 
   return (
     <Box p={4}>
