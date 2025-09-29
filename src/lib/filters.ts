@@ -69,7 +69,7 @@ export const validateSearchParams = (
   }: {
     nextAvailableSlot: Date;
     seats: string[];
-    cities: string[];
+    cities: { name: string; code: string }[];
   }
 ) => {
   const v: Partial<FilterValues> = {};
@@ -94,8 +94,12 @@ export const validateSearchParams = (
     v.seats = Number(params.seats);
   }
 
-  if (params.city && cities.includes(params.city)) {
-    v.city = params.city;
+  const city = cities.find(
+    (city) => createFilterCityString(city.name) === params.city
+  );
+
+  if (city) {
+    v.city = city.code;
   }
 
   return v;

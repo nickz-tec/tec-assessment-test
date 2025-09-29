@@ -20,9 +20,15 @@ const Home = async ({
 
   const nextAvailableSlot = getNextAvailableSlot();
 
+  const cities = data.items.map((city) => ({
+    name: city.name,
+    code: city.code,
+    region: city.region.name.en,
+  }));
+
   const extractedFilters = validateSearchParams(params, {
     nextAvailableSlot,
-    cities: data.items.map((city) => city.name),
+    cities,
     seats: availableSeats,
   });
 
@@ -31,11 +37,7 @@ const Home = async ({
   return (
     <Box p={4}>
       <MeetingRoomList
-        cities={data.items.map((city) => ({
-          name: city.name,
-          region: city.region.name.en,
-          code: city.code,
-        }))}
+        cities={cities}
         nextAvailableSlot={nextAvailableSlot}
         initialValue={{
           ...defaultValues,
