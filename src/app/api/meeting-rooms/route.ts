@@ -1,4 +1,4 @@
-import * as tecApi from "@/server/tec-api-client";
+import tecApi from "@/server/tec-api-client";
 import { NextResponse } from "next/server";
 
 import {
@@ -122,7 +122,7 @@ const loadAllMeetingRooms = async (cityCode: string) => {
   // Assume there are less than 10 pages of rooms with page size 50
   while (shouldRun && runCount < 10) {
     const { items, hasNextPage, pageNumber, pageCount } =
-      await tecApi.callApi<GetMeetingRoomsResponse>(
+      await tecApi.call<GetMeetingRoomsResponse>(
         `/core-api-me/api/v1/meetingrooms?${searchParams.toString()}`
       );
 
@@ -165,7 +165,7 @@ export const getAvailabilities = async (
     cityCode,
   });
 
-  const availabilities = await tecApi.callApi<GetRoomAvailabilitiesResponse>(
+  const availabilities = await tecApi.call<GetRoomAvailabilitiesResponse>(
     `/core-api-me/api/v1/meetingrooms/availabilities?${p.toString()}`
   );
 
@@ -187,7 +187,7 @@ const getPricings = async (
     isVcBooking: isVC.toString(),
   });
 
-  const pricings = await tecApi.callApi<GetPricingsResponse>(
+  const pricings = await tecApi.call<GetPricingsResponse>(
     `/core-api-me/api/v1/meetingrooms/pricings?${p.toString()}`
   );
 
@@ -197,7 +197,7 @@ const getPricings = async (
 };
 
 const getAllCentres = async () => {
-  const centres = await tecApi.callApi<GetCentresResponse>(
+  const centres = await tecApi.call<GetCentresResponse>(
     `/core-api-me/api/v1/centregroups`
   );
   const centresMap = new Map<string, GetCentresResponse[number]>();

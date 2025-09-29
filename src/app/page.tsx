@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import { headers } from "next/headers";
-import * as tecApi from "@/server/tec-api-client";
+import tecApi from "@/server/tec-api-client";
 import {
   createDefaultValues,
   getNextAvailableSlot,
@@ -9,6 +9,7 @@ import {
 import { availableSeats } from "@/lib/filters";
 import { FilterSearchParams } from "@/lib/types";
 import { MeetingRoomList } from "@/components/meeting-room-list/meeting-room-list";
+import { GetCitiesResponse } from "@/server/tec-api-types";
 
 const Home = async ({
   searchParams,
@@ -22,7 +23,9 @@ const Home = async ({
 
   const params = await searchParams;
 
-  const data = await tecApi.getCities();
+  const data = await tecApi.call<GetCitiesResponse>(
+    "/core-api/api/v1/cities?pageSize=100"
+  );
 
   const nextAvailableSlot = getNextAvailableSlot();
 

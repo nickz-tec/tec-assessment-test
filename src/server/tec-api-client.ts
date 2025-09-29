@@ -1,12 +1,4 @@
-"use server";
-
-import {
-  GetCitiesResponse,
-  GetRoomAvailabilitiesParams,
-  GetRoomAvailabilitiesResponse,
-} from "./tec-api-types";
-
-export async function callApi<T>(
+export async function call<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
@@ -36,18 +28,8 @@ export async function callApi<T>(
   return response.json() as Promise<T>;
 }
 
-const getCities = async () => {
-  return await callApi<GetCitiesResponse>(
-    "/core-api/api/v1/cities?pageSize=100"
-  );
+const tecApiClient = {
+  call,
 };
 
-const getRoomAvailabilities = async (params: GetRoomAvailabilitiesParams) => {
-  const queryParams = new URLSearchParams(params);
-
-  return await callApi<GetRoomAvailabilitiesResponse>(
-    `/core-api-me/api/v1/meetingrooms/availabilities?${queryParams.toString()}`
-  );
-};
-
-export { getCities, getRoomAvailabilities };
+export default tecApiClient;
