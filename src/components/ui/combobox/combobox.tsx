@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { SearchIcon } from "lucide-react";
 import {
   Popover,
   Portal,
@@ -19,12 +18,14 @@ export const Combobox = ({
   onValueChange,
   placeholder,
   groupSort,
+  icon,
 }: {
   items: ComboboxItem[];
   value: string;
   onValueChange: (value: string) => void;
   placeholder: string;
   groupSort?: (a: string, b: string) => number;
+  icon?: React.ReactNode;
 }) => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -54,7 +55,7 @@ export const Combobox = ({
       }}
     >
       <Popover.Trigger asChild>
-        <DropdownTrigger isOpen={open} w={"200px"} icon={<SearchIcon />}>
+        <DropdownTrigger isOpen={open} w={"200px"} icon={icon}>
           {selectedItem?.label || placeholder}
         </DropdownTrigger>
       </Popover.Trigger>

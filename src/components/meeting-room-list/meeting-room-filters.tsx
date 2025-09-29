@@ -13,6 +13,7 @@ import {
 } from "@/lib/filters";
 import { seatsOptions } from "./seats-options";
 import { isBefore, isAfter, set, startOfDay, addDays } from "date-fns";
+import { MapPinIcon, UsersIcon } from "lucide-react";
 
 export const MeetingRoomFilters = ({
   nextAvailableSlot,
@@ -131,6 +132,7 @@ export const MeetingRoomFilters = ({
         value={values.seats.toString()}
         onValueChange={handleSeatsChange}
         placeholder="Select seats"
+        icon={<UsersIcon />}
       />
       {/* TODO: Add fuzzy search */}
       <Combobox
@@ -139,6 +141,7 @@ export const MeetingRoomFilters = ({
         onValueChange={handleCityChange}
         placeholder="Select city"
         groupSort={(a, b) => a.localeCompare(b)}
+        icon={<MapPinIcon />}
       />
     </Flex>
   );

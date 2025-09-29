@@ -5,7 +5,6 @@ import {
   createListCollection,
   Portal,
 } from "@chakra-ui/react";
-import { ClockIcon } from "lucide-react";
 
 import { DropdownTrigger } from "./dropdown-trigger";
 
@@ -20,11 +19,13 @@ export function Select({
   value,
   onValueChange,
   placeholder,
+  icon,
 }: {
   items: SelectItem[];
   value: string;
   onValueChange: (value: string) => void;
   placeholder?: string;
+  icon?: React.ReactNode;
 }) {
   const collection = createListCollection({ items });
 
@@ -39,7 +40,7 @@ export function Select({
         <$Select.Context>
           {(select) => (
             <$Select.Trigger asChild>
-              <DropdownTrigger isOpen={select.open} icon={<ClockIcon />}>
+              <DropdownTrigger isOpen={select.open} icon={icon}>
                 <$Select.ValueText
                   placeholder={placeholder}
                   _placeholder={{
