@@ -8,7 +8,7 @@ import { Combobox, ComboboxItem } from "../ui/combobox";
 import { FilterValues } from "@/lib/types";
 import { createTimeString, generateTimeSlots } from "@/lib/filters";
 import { seatsOptions } from "./seats-options";
-import { isBefore, isAfter, set } from "date-fns";
+import { isBefore, isAfter, set, startOfDay } from "date-fns";
 
 export const MeetingRoomFilters = ({
   nextAvailableSlot,
@@ -21,7 +21,10 @@ export const MeetingRoomFilters = ({
   values: FilterValues;
   updateFilter: (setter: (old: FilterValues) => FilterValues) => void;
 }) => {
-  const slots = generateTimeSlots(nextAvailableSlot, 30);
+  // Generate slots for the selected day while enforcing nextAvailableSlot as the earliest selectable time.
+  const slots = generateTimeSlots(startOfDay(values.startDate), 30).filter(
+    (time) => !isBefore(time, nextAvailableSlot)
+  );
 
   const availableTimeSlots = slots.map((time) => ({
     label: createTimeString(time),
@@ -93,6 +96,8 @@ export const MeetingRoomFilters = ({
       city,
     }));
   };
+
+  console.log(values);
 
   return (
     <Flex gap={2}>
