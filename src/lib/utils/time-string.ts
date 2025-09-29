@@ -1,23 +1,28 @@
-import { addMinutes, format, startOfDay } from "date-fns";
+import { addMinutes, format, isSameDay } from "date-fns";
 
 export const createTimeString = (date: string | Date): string => {
   return format(date, "HH:mm");
 };
 
-export const generateTimeStrings = (interval: number): string[] => {
-  const timeStrings: string[] = [];
-  const slots = (24 * 60) / interval;
-  let currentTime = startOfDay(new Date());
-
+export const generateTimeStrings = (date: Date, interval: number): string[] => {
   if (interval <= 0) {
-    // Prevent infinite loops with an edge case guard
     return [];
   }
 
-  for (let i = 0; i < slots; i++) {
+  const timeStrings: string[] = [];
+  let currentTime = new Date(date);
+
+  while (isSameDay(currentTime, date)) {
     const timeString = format(currentTime, "HH:mm");
     timeStrings.push(timeString);
-    currentTime = addMinutes(currentTime, interval);
+
+    const nextTime = addMinutes(currentTime, interval);
+
+    if (!isSameDay(nextTime, date)) {
+      break;
+    }
+
+    currentTime = nextTime;
   }
 
   return timeStrings;
