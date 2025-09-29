@@ -19,9 +19,10 @@ import "./calendar.css";
 type Props = {
   selected: Date | undefined;
   onSelect: (date: Date) => void;
+  disabledBefore: Date;
 };
 
-export function Calendar({ selected, onSelect }: Props) {
+export function Calendar({ selected, onSelect, disabledBefore }: Props) {
   const [month, setMonth] = useState<Date>(new Date());
   const [selectingYear, setSelectingYear] = useState(false);
 
@@ -99,7 +100,7 @@ export function Calendar({ selected, onSelect }: Props) {
           month={month}
           onMonthChange={setMonth}
           disabled={{
-            before: today,
+            before: disabledBefore,
           }}
           required
           mode="single"

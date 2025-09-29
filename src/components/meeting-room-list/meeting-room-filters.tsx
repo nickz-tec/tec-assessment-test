@@ -6,9 +6,13 @@ import { Select } from "../ui/select";
 import { Flex } from "@chakra-ui/react";
 import { Combobox, ComboboxItem } from "../ui/combobox";
 import { FilterValues } from "@/lib/types";
-import { createTimeString, generateTimeSlots } from "@/lib/filters";
+import {
+  createTimeString,
+  generateTimeSlots,
+  hasCutOffTimePassed,
+} from "@/lib/filters";
 import { seatsOptions } from "./seats-options";
-import { isBefore, isAfter, set, startOfDay } from "date-fns";
+import { isBefore, isAfter, set, startOfDay, addDays } from "date-fns";
 
 export const MeetingRoomFilters = ({
   nextAvailableSlot,
@@ -97,11 +101,19 @@ export const MeetingRoomFilters = ({
     }));
   };
 
-  console.log(values);
+  const today = new Date();
+
+  const disabledBefore = hasCutOffTimePassed(today)
+    ? addDays(new Date(), 1)
+    : today;
 
   return (
     <Flex gap={2}>
-      <DatePicker date={values.startDate} onSelect={handleDayChange} />
+      <DatePicker
+        date={values.startDate}
+        onSelect={handleDayChange}
+        disabledBefore={disabledBefore}
+      />
       <Select
         items={startTimeOptions}
         value={values.startDate.toISOString()}

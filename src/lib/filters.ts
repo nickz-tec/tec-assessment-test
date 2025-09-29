@@ -48,7 +48,7 @@ export const getNextAvailableSlot = () => {
   return startDate;
 };
 
-const hasCutOffTimePassed = (date: Date): boolean => {
+export const hasCutOffTimePassed = (date: Date): boolean => {
   const cutoffTime = set(new Date(), {
     hours: CUTOFF_HOUR,
     minutes: 0,

@@ -13,9 +13,11 @@ import { DropdownTrigger } from "../dropdown-trigger";
 export const DatePicker = ({
   date,
   onSelect,
+  disabledBefore,
 }: {
   date: Date;
   onSelect: (date: Date) => void;
+  disabledBefore: Date;
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -59,7 +61,11 @@ export const DatePicker = ({
               pr: "0.75rem",
             }}
           >
-            <Calendar selected={date} onSelect={handleDateChange} />
+            <Calendar
+              selected={date}
+              onSelect={handleDateChange}
+              disabledBefore={disabledBefore}
+            />
           </Popover.Content>
         </Popover.Positioner>
       </Portal>
