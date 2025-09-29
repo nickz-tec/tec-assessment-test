@@ -10,12 +10,17 @@ import { CalendarIcon } from "lucide-react";
 
 import { DropdownTrigger } from "../dropdown-trigger";
 
-export const DatePicker = () => {
-  const [date, setDate] = useState<Date>();
+export const DatePicker = ({
+  date,
+  onSelect,
+}: {
+  date: Date;
+  onSelect: (date: Date) => void;
+}) => {
   const [open, setOpen] = useState(false);
 
   const handleDateChange = (date: Date) => {
-    setDate(date);
+    onSelect(date);
     setOpen(false);
   };
 

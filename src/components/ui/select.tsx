@@ -15,19 +15,33 @@ export type SelectItem = {
   disabled?: boolean;
 };
 
-export function Select({ items }: { items: SelectItem[] }) {
+export function Select({
+  items,
+  value,
+  onValueChange,
+  placeholder,
+}: {
+  items: SelectItem[];
+  value: string;
+  onValueChange: (value: string) => void;
+  placeholder?: string;
+}) {
   const collection = createListCollection({ items });
 
   return (
-    <$Select.Root collection={collection}>
+    <$Select.Root
+      collection={collection}
+      value={value ? [value] : undefined}
+      onValueChange={(details) => onValueChange(details.value[0])}
+    >
       <$Select.HiddenSelect />
       <$Select.Control>
         <$Select.Context>
           {(select) => (
-            <$Select.Trigger width={"320px"} asChild>
+            <$Select.Trigger asChild>
               <DropdownTrigger isOpen={select.open} icon={<ClockIcon />}>
                 <$Select.ValueText
-                  placeholder="Select time"
+                  placeholder={placeholder}
                   _placeholder={{
                     color: "fg.subtle",
                   }}
@@ -59,6 +73,10 @@ export function Select({ items }: { items: SelectItem[] }) {
                   opacity: 1,
                   bg: "gray.200",
                   color: "gray.400",
+                }}
+                _checked={{
+                  bg: "blue.500",
+                  color: "white",
                 }}
                 _highlighted={{
                   bg: "blue.500",

@@ -13,16 +13,28 @@ import { DropdownTrigger } from "../dropdown-trigger";
 import { SearchBox } from "./search-box";
 import { ComboboxItem } from "./types";
 
-export const Combobox = ({ items }: { items: ComboboxItem[] }) => {
+export const Combobox = ({
+  items,
+  value,
+  onValueChange,
+  placeholder,
+  groupSort,
+}: {
+  items: ComboboxItem[];
+  value: string;
+  onValueChange: (value: string) => void;
+  placeholder: string;
+  groupSort?: (a: string, b: string) => number;
+}) => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const [value, setValue] = useState<string>();
 
   const { contains } = useFilter({ sensitivity: "base" });
   const { collection, filter } = useListCollection({
     initialItems: items,
     filter: contains,
     groupBy: (item) => item.group,
+    groupSort,
   });
 
   const selectedItem = items.find((item) => item.value === value);
@@ -43,7 +55,7 @@ export const Combobox = ({ items }: { items: ComboboxItem[] }) => {
     >
       <Popover.Trigger asChild>
         <DropdownTrigger isOpen={open} w={"200px"} icon={<SearchIcon />}>
-          {selectedItem?.label || "Select item"}
+          {selectedItem?.label || placeholder}
         </DropdownTrigger>
       </Popover.Trigger>
 
@@ -60,7 +72,7 @@ export const Combobox = ({ items }: { items: ComboboxItem[] }) => {
               collection={collection}
               inputValue={inputValue}
               onValueChange={(value) => {
-                setValue(value);
+                onValueChange(value);
                 setOpen(false);
                 filter("");
               }}
