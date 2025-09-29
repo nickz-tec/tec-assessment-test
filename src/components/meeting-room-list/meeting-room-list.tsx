@@ -42,7 +42,7 @@ export const MeetingRoomList = ({
     const endDate = createFilterDateString(filterValues.endDate);
 
     const city = citiesLookupRef.current.find(
-      (city) => city.code === filterValues.city
+      (city) => city.code === filterValues.cityCode
     );
 
     // Sync filter values with URL search params
@@ -55,7 +55,7 @@ export const MeetingRoomList = ({
       urlParams.set("city", createFilterCityString(city.name));
     } else {
       console.error(
-        `Unexpected error: City name for code: ${filterValues.city} not found`
+        `Unexpected error: City name for code: ${filterValues.cityCode} not found`
       );
     }
 
@@ -69,7 +69,7 @@ export const MeetingRoomList = ({
       apiParams.set("startDate", startDate);
       apiParams.set("endDate", endDate);
       apiParams.set("seats", filterValues.seats.toString());
-      apiParams.set("cityCode", filterValues.city);
+      apiParams.set("cityCode", filterValues.cityCode);
 
       const response = await fetch(
         `/api/meeting-rooms?${apiParams.toString()}`

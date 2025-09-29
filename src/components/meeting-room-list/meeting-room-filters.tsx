@@ -96,10 +96,10 @@ export const MeetingRoomFilters = ({
     }));
   };
 
-  const handleCityChange = (city: string) => {
+  const handleCityChange = (cityCode: string) => {
     updateFilter((old) => ({
       ...old,
-      city,
+      cityCode,
     }));
   };
 
@@ -149,7 +149,7 @@ export const MeetingRoomFilters = ({
       <Field label="City">
         <Combobox
           items={cities}
-          value={values.city}
+          value={values.cityCode}
           onValueChange={handleCityChange}
           placeholder="Select city"
           groupSort={(a, b) => a.localeCompare(b)}

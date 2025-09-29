@@ -2,7 +2,7 @@ export type FilterValues = {
   startDate: Date;
   endDate: Date;
   seats: number;
-  city: string;
+  cityCode: string;
 };
 
 export type FilterSearchParams = Record<

@@ -99,7 +99,7 @@ export const validateSearchParams = (
   );
 
   if (city) {
-    v.city = city.code;
+    v.cityCode = city.code;
   }
 
   return v;
@@ -123,7 +123,7 @@ export const createDefaultValues = (
     startDate,
     endDate,
     seats: 1,
-    city: cityCode,
+    cityCode,
   };
 };
 
