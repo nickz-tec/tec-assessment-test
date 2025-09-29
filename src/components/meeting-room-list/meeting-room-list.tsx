@@ -3,9 +3,9 @@ import { Box, Text } from "@chakra-ui/react";
 
 import { MeetingRoomFilters } from "./meeting-room-filters";
 import { FilterValues } from "@/lib/types";
-import { useEffect, useRef, useState } from "react";
-import { createFilterCityString, createFilterDateString } from "@/lib/filters";
+import { useState } from "react";
 import { useMeetingRoomsQuery } from "./use-meeting-rooms-query";
+import { useSyncSearchParams } from "./use-sync-search-params";
 
 type Props = {
   cities: {
@@ -26,38 +26,7 @@ export const MeetingRoomList = ({
 
   const { meetingRooms, isLoading } = useMeetingRoomsQuery(filterValues);
 
-  // Ref used to lookup city by code
-  const citiesLookupRef = useRef(cities);
-  citiesLookupRef.current = cities;
-
-  useEffect(() => {
-    const startDate = createFilterDateString(filterValues.startDate);
-    const endDate = createFilterDateString(filterValues.endDate);
-
-    const city = citiesLookupRef.current.find(
-      (city) => city.code === filterValues.cityCode
-    );
-
-    // Sync filter values with URL search params
-    const urlParams = new URLSearchParams();
-    urlParams.set("start_date", startDate);
-    urlParams.set("end_date", endDate);
-    urlParams.set("seats", filterValues.seats.toString());
-
-    if (city) {
-      urlParams.set("city", createFilterCityString(city.name));
-    } else {
-      console.error(
-        `Unexpected error: City name for code: ${filterValues.cityCode} not found`
-      );
-    }
-
-    if (filterValues.isVC) {
-      urlParams.set("is_vc", "true");
-    }
-
-    window.history.replaceState({}, "", `/?${urlParams.toString()}`);
-  }, [filterValues]);
+  useSyncSearchParams(filterValues, cities);
 
   return (
     <Box>
