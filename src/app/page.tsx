@@ -23,17 +23,17 @@ const Home = async ({
 
   const params = await searchParams;
 
-  const data = await tecApi.call<GetCitiesResponse>(
+  const citiesResponse = await tecApi.call<GetCitiesResponse>(
     "/core-api/api/v1/cities?pageSize=100"
   );
 
-  const nextAvailableSlot = getNextAvailableSlot();
-
-  const cities = data.items.map((city) => ({
+  const cities = citiesResponse.items.map((city) => ({
     name: city.name,
     code: city.code,
     region: city.region.name.en,
   }));
+
+  const nextAvailableSlot = getNextAvailableSlot();
 
   const extractedFilters = validateSearchParams(params, {
     nextAvailableSlot,
