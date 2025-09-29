@@ -29,7 +29,8 @@ export async function callApi<T>(
   });
 
   if (!response.ok) {
-    throw new Error(`API call to ${endpoint} failed: ${response.statusText}`);
+    // TEC api server errors are returned as plain text
+    throw new Error(`API call to ${endpoint} failed: ${await response.text()}`);
   }
 
   return response.json() as Promise<T>;

@@ -2,9 +2,8 @@
 import { Box, Text } from "@chakra-ui/react";
 
 import { MeetingRoomFilters } from "./meeting-room-filters";
-import { FilterValues } from "@/lib/types";
+import { FilterValues, MeetingRoomDetails } from "@/lib/types";
 import { useEffect, useRef, useState } from "react";
-import { GetRoomAvailabilitiesResponse } from "@/server/tec-api-types";
 import { createFilterCityString, createFilterDateString } from "@/lib/filters";
 
 type Props = {
@@ -28,8 +27,7 @@ export const MeetingRoomList = ({
   const citiesLookupRef = useRef(cities);
   citiesLookupRef.current = cities;
 
-  const [meetingRooms, setMeetingRooms] =
-    useState<GetRoomAvailabilitiesResponse>([]);
+  const [meetingRooms, setMeetingRooms] = useState<MeetingRoomDetails[]>([]);
 
   useEffect(() => {
     const startDate = createFilterDateString(filterValues.startDate);
@@ -76,7 +74,7 @@ export const MeetingRoomList = ({
         `/api/meeting-rooms?${apiParams.toString()}`
       );
 
-      const data = (await response.json()) as GetRoomAvailabilitiesResponse;
+      const data = (await response.json()) as MeetingRoomDetails[];
 
       setMeetingRooms(data);
     };
@@ -94,8 +92,9 @@ export const MeetingRoomList = ({
       />
 
       {meetingRooms.map((meetingRoom) => (
-        <Box key={meetingRoom.roomCode}>
-          <Text>{meetingRoom.roomCode}</Text>
+        <Box key={meetingRoom.details.roomCode}>
+          <Text>{meetingRoom.details.roomName}</Text>
+          <Text>{meetingRoom.centreGroup.cityCode}</Text>
         </Box>
       ))}
     </Box>
