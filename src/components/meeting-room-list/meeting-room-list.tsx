@@ -31,12 +31,6 @@ export const MeetingRoomList = ({
   const [meetingRooms, setMeetingRooms] =
     useState<GetRoomAvailabilitiesResponse>([]);
 
-  const cityOptions = cities.map((city) => ({
-    label: city.name,
-    value: city.code,
-    group: city.region,
-  }));
-
   useEffect(() => {
     const startDate = createFilterDateString(filterValues.startDate);
     const endDate = createFilterDateString(filterValues.endDate);
@@ -93,7 +87,7 @@ export const MeetingRoomList = ({
   return (
     <Box>
       <MeetingRoomFilters
-        cities={cityOptions}
+        cities={cities}
         nextAvailableSlot={nextAvailableSlot}
         values={filterValues}
         updateFilter={setFilterValues}

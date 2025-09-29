@@ -4,7 +4,7 @@ import { DatePicker } from "../ui/date-picker/date-picker";
 import { Select } from "../ui/select";
 
 import { Flex, Box } from "@chakra-ui/react";
-import { Combobox, ComboboxItem } from "../ui/combobox";
+import { Combobox } from "../ui/combobox";
 import { FilterValues } from "@/lib/types";
 import {
   createTimeString,
@@ -23,8 +23,12 @@ export const MeetingRoomFilters = ({
   cities,
   updateFilter,
 }: {
+  cities: {
+    name: string;
+    region: string;
+    code: string;
+  }[];
   nextAvailableSlot: Date;
-  cities: ComboboxItem[];
   values: FilterValues;
   updateFilter: (setter: (old: FilterValues) => FilterValues) => void;
 }) => {
@@ -43,6 +47,12 @@ export const MeetingRoomFilters = ({
   const endTimeOptions = availableTimeSlots.map((time) => ({
     ...time,
     disabled: !isAfter(time.value, values.startDate),
+  }));
+
+  const cityOptions = cities.map((city) => ({
+    label: city.name,
+    value: city.code,
+    group: city.region,
   }));
 
   const handleStartTimeChange = (time: string) => {
@@ -157,7 +167,7 @@ export const MeetingRoomFilters = ({
 
         <Field label="City">
           <Combobox
-            items={cities}
+            items={cityOptions}
             value={values.cityCode}
             onValueChange={handleCityChange}
             placeholder="Select city"
