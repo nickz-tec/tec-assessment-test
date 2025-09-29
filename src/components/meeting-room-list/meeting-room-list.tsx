@@ -2,9 +2,10 @@
 import { Box, Text } from "@chakra-ui/react";
 
 import { MeetingRoomFilters } from "./meeting-room-filters";
-import { FilterValues, MeetingRoomDetails } from "@/lib/types";
+import { FilterValues } from "@/lib/types";
 import { useEffect, useRef, useState } from "react";
 import { createFilterCityString, createFilterDateString } from "@/lib/filters";
+import { useMeetingRoomsQuery } from "./use-meeting-rooms-query";
 
 type Props = {
   cities: {
@@ -23,11 +24,11 @@ export const MeetingRoomList = ({
 }: Props) => {
   const [filterValues, setFilterValues] = useState(initialValue);
 
+  const { meetingRooms, isLoading } = useMeetingRoomsQuery(filterValues);
+
   // Ref used to lookup city by code
   const citiesLookupRef = useRef(cities);
   citiesLookupRef.current = cities;
-
-  const [meetingRooms, setMeetingRooms] = useState<MeetingRoomDetails[]>([]);
 
   useEffect(() => {
     const startDate = createFilterDateString(filterValues.startDate);
@@ -56,34 +57,6 @@ export const MeetingRoomList = ({
     }
 
     window.history.replaceState({}, "", `/?${urlParams.toString()}`);
-
-    // Fetch meeting rooms
-    const fetchMeetingRooms = async () => {
-      setMeetingRooms([]);
-
-      const apiParams = new URLSearchParams();
-      apiParams.set("startDate", startDate);
-      apiParams.set("endDate", endDate);
-      apiParams.set("seats", filterValues.seats.toString());
-      apiParams.set("cityCode", filterValues.cityCode);
-      if (filterValues.isVC) {
-        apiParams.set("isVC", "true");
-      }
-
-      const response = await fetch(
-        `/api/meeting-rooms?${apiParams.toString()}`
-      );
-
-      // Inline type cast since this is the only instance
-      const res = (await response.json()) as {
-        success: boolean;
-        data: MeetingRoomDetails[];
-      };
-
-      setMeetingRooms(res.data);
-    };
-
-    fetchMeetingRooms();
   }, [filterValues]);
 
   return (
@@ -94,6 +67,8 @@ export const MeetingRoomList = ({
         values={filterValues}
         updateFilter={setFilterValues}
       />
+
+      {isLoading && <Text>Loading...</Text>}
 
       {meetingRooms.map((meetingRoom) => (
         <Box key={meetingRoom.details.roomCode}>
