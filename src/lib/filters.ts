@@ -103,7 +103,10 @@ export const validateSearchParams = (
 
 // Same day: default to a 1-hour window two hours from now;
 // Next day: defaults to a 9–10 a.m.
-export const createDefaultValues = (nextAvailableSlot: Date): FilterValues => {
+export const createDefaultValues = (
+  nextAvailableSlot: Date,
+  cityCode: string
+): FilterValues => {
   const startDate = isToday(nextAvailableSlot)
     ? addHours(nextAvailableSlot, 2)
     : addHours(nextAvailableSlot, 9);
@@ -116,8 +119,7 @@ export const createDefaultValues = (nextAvailableSlot: Date): FilterValues => {
     startDate,
     endDate,
     seats: 1,
-    // TODO: Set default city from request
-    city: "hong-kong",
+    city: cityCode,
   };
 };
 
@@ -127,4 +129,8 @@ export const createFilterDateString = (date: Date) => {
 
 export const createTimeString = (date: string | Date): string => {
   return format(date, "HH:mm");
+};
+
+export const createFilterCityString = (cityName: string) => {
+  return cityName.toLowerCase().replaceAll(" ", "-");
 };

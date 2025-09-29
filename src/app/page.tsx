@@ -26,7 +26,7 @@ const Home = async ({
     seats: availableSeats,
   });
 
-  const defaultValues = createDefaultValues(nextAvailableSlot);
+  const defaultValues = createDefaultValues(nextAvailableSlot, "HKG");
 
   return (
     <Box p={4}>

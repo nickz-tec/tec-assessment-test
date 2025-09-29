@@ -3,10 +3,9 @@ import { Box, Text } from "@chakra-ui/react";
 
 import { MeetingRoomFilters } from "./meeting-room-filters";
 import { FilterValues } from "@/lib/types";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GetRoomAvailabilitiesResponse } from "@/server/tec-api-types";
-import * as tecApi from "@/server/tec-api-client";
-import { createFilterDateString } from "@/lib/filters";
+import { createFilterCityString, createFilterDateString } from "@/lib/filters";
 
 type Props = {
   cities: {
@@ -24,6 +23,11 @@ export const MeetingRoomList = ({
   initialValue,
 }: Props) => {
   const [filterValues, setFilterValues] = useState(initialValue);
+
+  // Ref used to lookup city by code
+  const citiesLookupRef = useRef(cities);
+  citiesLookupRef.current = cities;
+
   const [meetingRooms, setMeetingRooms] =
     useState<GetRoomAvailabilitiesResponse>([]);
 
@@ -37,25 +41,43 @@ export const MeetingRoomList = ({
     const startDate = createFilterDateString(filterValues.startDate);
     const endDate = createFilterDateString(filterValues.endDate);
 
+    const city = citiesLookupRef.current.find(
+      (city) => city.code === filterValues.city
+    );
+
     // Sync filter values with URL search params
-    const newParams = new URLSearchParams();
-    newParams.set("start_date", startDate);
-    newParams.set("end_date", endDate);
-    newParams.set("seats", filterValues.seats.toString());
-    newParams.set("city", filterValues.city);
-    window.history.replaceState({}, "", `/?${newParams.toString()}`);
+    const urlParams = new URLSearchParams();
+    urlParams.set("start_date", startDate);
+    urlParams.set("end_date", endDate);
+    urlParams.set("seats", filterValues.seats.toString());
+
+    if (city) {
+      urlParams.set("city", createFilterCityString(city.name));
+    } else {
+      console.error(
+        `Unexpected error: City name for code: ${filterValues.city} not found`
+      );
+    }
+
+    window.history.replaceState({}, "", `/?${urlParams.toString()}`);
 
     // Fetch meeting rooms
     const fetchMeetingRooms = async () => {
       setMeetingRooms([]);
 
-      const response = await tecApi.getRoomAvailabilities({
-        startDate,
-        endDate,
-        // TODO: Map city name to city code
-        cityCode: "HKG",
-      });
-      setMeetingRooms(response);
+      const apiParams = new URLSearchParams();
+      apiParams.set("startDate", startDate);
+      apiParams.set("endDate", endDate);
+      apiParams.set("seats", filterValues.seats.toString());
+      apiParams.set("cityCode", filterValues.city);
+
+      const response = await fetch(
+        `/api/meeting-rooms?${apiParams.toString()}`
+      );
+
+      const data = (await response.json()) as GetRoomAvailabilitiesResponse;
+
+      setMeetingRooms(data);
     };
 
     fetchMeetingRooms();
