@@ -1,4 +1,5 @@
 import { Box } from "@chakra-ui/react";
+import { headers } from "next/headers";
 import * as tecApi from "@/server/tec-api-client";
 import {
   createDefaultValues,
@@ -14,6 +15,11 @@ const Home = async ({
 }: {
   searchParams: Promise<FilterSearchParams>;
 }) => {
+  const headersList = await headers();
+  // This is mock code demonstrating getting a city code based
+  // on the user location
+  const userCityCode = headersList.get("x-city-code") || "HKG";
+
   const params = await searchParams;
 
   const data = await tecApi.getCities();
@@ -32,7 +38,7 @@ const Home = async ({
     seats: availableSeats,
   });
 
-  const defaultValues = createDefaultValues(nextAvailableSlot, "HKG");
+  const defaultValues = createDefaultValues(nextAvailableSlot, userCityCode);
 
   return (
     <Box p={4}>
