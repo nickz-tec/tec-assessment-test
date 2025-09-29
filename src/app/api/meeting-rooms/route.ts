@@ -8,54 +8,103 @@ import {
   GetRoomAvailabilitiesResponse,
 } from "@/server/tec-api-types";
 import { MeetingRoomDetails } from "@/lib/types";
+import { availableSeats } from "@/lib/filters";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const cityCode = searchParams.get("cityCode");
-  const startDate = searchParams.get("startDate");
-  const endDate = searchParams.get("endDate");
-  const seats = searchParams.get("seats");
-  const isVC = searchParams.get("isVC");
+
+  try {
+    const { cityCode, startDate, endDate, seats, isVC } =
+      validateRequestParams(searchParams);
+
+    const [availabilities, pricings, allCentres] = await Promise.all([
+      getAvailabilities(startDate, endDate, cityCode),
+      getPricings(startDate, endDate, cityCode, isVC === "true"),
+      getAllCentres(),
+    ]);
+
+    const rooms = await loadAllMeetingRooms(cityCode);
+
+    const roomResults: MeetingRoomDetails[] = rooms
+      .filter(baseRoomFilterFunction(parseInt(seats), isVC === "true"))
+      .flatMap((room) => {
+        const availability = availabilities.get(room.roomCode);
+
+        // Assume only need to check isAvailable flag
+        if (!availability || !availability.isAvailable) {
+          return [];
+        }
+
+        const price = pricings.get(room.roomCode);
+        const centre = allCentres.get(room.centreCode);
+
+        if (!price || !centre) {
+          return [];
+        }
+
+        return {
+          details: room,
+          availability,
+          price,
+          centreGroup: centre,
+        };
+      });
+
+    return NextResponse.json({
+      success: true,
+      data: roomResults,
+    });
+  } catch {
+    // Simple error handling for the sake of the demo
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Something went wrong...",
+        data: [],
+      },
+      { status: 400 }
+    );
+  }
+}
+
+const validateRequestParams = (params: URLSearchParams) => {
+  const cityCode = params.get("cityCode");
+  const startDate = params.get("startDate");
+  const endDate = params.get("endDate");
+  const seats = params.get("seats");
+  const isVC = params.get("isVC");
 
   if (!startDate || !endDate || !seats || !cityCode) {
-    return new Response("Missing required parameters", { status: 400 });
+    throw new Error("Missing required parameters");
   }
 
-  const [availabilities, pricings, allCentres] = await Promise.all([
-    getAvailabilities(startDate, endDate, cityCode),
-    getPricings(startDate, endDate, cityCode, isVC === "true"),
-    getAllCentres(),
-  ]);
+  if (isVC && isVC !== "true" && isVC !== "false") {
+    throw new Error("Invalid isVC value");
+  }
 
-  const rooms = await loadAllMeetingRooms(cityCode);
+  if (!availableSeats.includes(seats)) {
+    throw new Error("Invalid seats value");
+  }
 
-  const roomResults: MeetingRoomDetails[] = rooms
-    .filter(baseRoomFilterFunction(parseInt(seats), isVC === "true"))
-    .flatMap((room) => {
-      const availability = availabilities.get(room.roomCode);
+  const start = new Date(startDate);
+  const end = new Date(endDate);
 
-      // Assume only need to check isAvailable flag
-      if (!availability || !availability.isAvailable) {
-        return [];
-      }
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+    throw new Error("Invalid date format");
+  }
 
-      const price = pricings.get(room.roomCode);
-      const centre = allCentres.get(room.centreCode);
+  if (end <= start) {
+    throw new Error("Invalid date range");
+  }
 
-      if (!price || !centre) {
-        return [];
-      }
-
-      return {
-        details: room,
-        availability,
-        price,
-        centreGroup: centre,
-      };
-    });
-
-  return NextResponse.json(roomResults);
-}
+  return {
+    cityCode,
+    startDate,
+    endDate,
+    seats,
+    isVC,
+  };
+};
 
 const loadAllMeetingRooms = async (cityCode: string) => {
   const rooms: GetMeetingRoomsResponse["items"] = [];

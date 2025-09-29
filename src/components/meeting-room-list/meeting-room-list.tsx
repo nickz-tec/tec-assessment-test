@@ -74,9 +74,13 @@ export const MeetingRoomList = ({
         `/api/meeting-rooms?${apiParams.toString()}`
       );
 
-      const data = (await response.json()) as MeetingRoomDetails[];
+      // Inline type cast since this is the only instance
+      const res = (await response.json()) as {
+        success: boolean;
+        data: MeetingRoomDetails[];
+      };
 
-      setMeetingRooms(data);
+      setMeetingRooms(res.data);
     };
 
     fetchMeetingRooms();
