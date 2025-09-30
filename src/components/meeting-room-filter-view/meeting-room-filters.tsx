@@ -239,6 +239,10 @@ export const MeetingRoomFilters = ({
         label="Video Conference (Additional cost may apply)"
         checked={values.isVC}
         onCheckedChange={handleVCChange}
+        alignItems={{
+          base: "baseline",
+          md: "center",
+        }}
       />
     </Box>
   );

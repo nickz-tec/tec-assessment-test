@@ -4,16 +4,18 @@ export const Checkbox = ({
   label,
   checked,
   onCheckedChange,
+  ...props
 }: {
   label: string;
   checked: boolean;
   onCheckedChange: (checked: boolean) => void;
-}) => {
+} & Omit<$Checkbox.RootProps, "checked" | "onCheckedChange">) => {
   return (
     <$Checkbox.Root
       checked={checked}
       onCheckedChange={(e) => onCheckedChange(!!e.checked)}
       gap={2}
+      {...props}
     >
       <$Checkbox.HiddenInput />
       <$Checkbox.Control
