@@ -6,6 +6,15 @@ import { FilterValues } from "@/lib/types";
 import { useState } from "react";
 import { useMeetingRoomsQuery } from "./use-meeting-rooms-query";
 import { useSyncSearchParams } from "./use-sync-search-params";
+import { CentreGroup } from "../meeting-room-list/centre-group";
+import {
+  getCentreAddress,
+  getCentreName,
+  getCentrePhone,
+} from "@/lib/meeting-rooms";
+import { MeetingRoomItem } from "../meeting-room-list/meeting-room-item";
+import { Loader } from "./loader";
+import { EmptyState } from "./empty-state";
 
 type Props = {
   cities: {
@@ -37,14 +46,40 @@ export const MeetingRoomFilterView = ({
         updateFilter={setFilterValues}
       />
 
-      {isLoading && <Text>Loading...</Text>}
+      {isLoading && <Loader />}
 
-      {meetingRooms.map((meetingRoom) => (
-        <Box key={meetingRoom.details.roomCode}>
-          <Text>{meetingRoom.details.roomName}</Text>
-          <Text>{meetingRoom.centreGroup.cityCode}</Text>
-        </Box>
-      ))}
+      {meetingRooms &&
+        meetingRooms.map(({ centreGroup, rooms, groupId }) => {
+          return (
+            <CentreGroup
+              key={groupId}
+              centreGroupName={getCentreName(centreGroup)}
+              address={getCentreAddress(centreGroup)}
+              phone={getCentrePhone(centreGroup)}
+            >
+              {rooms.map((room) => (
+                <MeetingRoomItem
+                  key={room.details.roomCode}
+                  roomName={room.details.roomName}
+                  photoUrls={room.details.photoUrls}
+                  capacity={room.details.capacity}
+                  amenities={room.details.amenities}
+                  hourlyPrice={room.price.finalPrice}
+                  currencyCode={room.price.currencyCode}
+                  floor={room.details.floor}
+                />
+              ))}
+            </CentreGroup>
+          );
+        })}
+
+      {meetingRooms && meetingRooms.length > 0 && (
+        <Text textAlign="center" mt="2rem">
+          A total of {meetingRooms.length} meeting rooms at your service
+        </Text>
+      )}
+
+      {meetingRooms && meetingRooms.length === 0 && <EmptyState />}
     </Box>
   );
 };

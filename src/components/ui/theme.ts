@@ -31,6 +31,11 @@ export const config = defineConfig({
         red: {
           value: "#C80000",
         },
+        gold: {
+          500: {
+            value: "#CCA15C",
+          },
+        },
       },
       fonts: {
         heading: {

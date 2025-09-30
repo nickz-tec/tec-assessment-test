@@ -1,15 +1,20 @@
 import { createFilterDateString } from "@/lib/filters";
 import { FilterValues, MeetingRoomDetails } from "@/lib/types";
 import { useEffect, useState } from "react";
+import {
+  MeetingRoomsByCentreGroup,
+  groupMeetingRoomsByCentre,
+} from "@/lib/meeting-rooms";
 
 export const useMeetingRoomsQuery = (filterValues: FilterValues) => {
-  const [meetingRooms, setMeetingRooms] = useState<MeetingRoomDetails[]>([]);
+  const [meetingRooms, setMeetingRooms] =
+    useState<MeetingRoomsByCentreGroup | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchMeetingRooms = async () => {
       setIsLoading(true);
-      setMeetingRooms([]);
+      setMeetingRooms(null);
 
       const p = new URLSearchParams({
         startDate: createFilterDateString(filterValues.startDate),
@@ -30,7 +35,7 @@ export const useMeetingRoomsQuery = (filterValues: FilterValues) => {
         data: MeetingRoomDetails[];
       };
 
-      setMeetingRooms(res.data);
+      setMeetingRooms(groupMeetingRoomsByCentre(res.data));
       setIsLoading(false);
     };
 

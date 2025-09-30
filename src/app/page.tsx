@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Container } from "@chakra-ui/react";
 import { headers } from "next/headers";
 import tecApi from "@/server/tec-api-client";
 import {
@@ -44,7 +44,7 @@ const Home = async ({
   const defaultValues = createDefaultValues(nextAvailableSlot, userCityCode);
 
   return (
-    <Box p={4}>
+    <Container px="2rem" pt="1.5rem" maxW="1440px" pb="4rem">
       <MeetingRoomFilterView
         cities={cities}
         nextAvailableSlot={nextAvailableSlot}
@@ -53,7 +53,7 @@ const Home = async ({
           ...extractedFilters,
         }}
       />
-    </Box>
+    </Container>
   );
 };
 
