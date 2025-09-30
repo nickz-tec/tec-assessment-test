@@ -16,6 +16,7 @@ export const config = defineConfig({
           500: { value: "#256BA2" },
         },
         gray: {
+          50: { value: "#fafafa" },
           100: { value: "#F4F4F5" },
           200: { value: "#E4E4E7" },
           400: {

@@ -33,11 +33,41 @@ export const MeetingRoomItem = ({
   return (
     <SimpleGrid
       asChild
-      columns={12}
+      columns={{
+        base: 1,
+        md: 12,
+      }}
+      border={{
+        base: "1px solid",
+        md: "none",
+      }}
+      borderColor={{
+        base: "gray.200",
+        md: "transparent",
+      }}
+      rowGap={{
+        base: "1rem",
+        md: "0",
+      }}
+      bg={{
+        base: "gray.50",
+        md: "white",
+      }}
       md={{
         gap: "1.25rem",
       }}
-      py="1rem"
+      mt={{
+        base: "1rem",
+        md: "0",
+      }}
+      mb={{
+        base: "0.5rem",
+        md: "0",
+      }}
+      py={{
+        base: "0",
+        md: "1rem",
+      }}
       _hover={{
         bg: "blue.5",
       }}
@@ -49,10 +79,14 @@ export const MeetingRoomItem = ({
     >
       <a>
         <GridItem
-          height={"230px"}
+          height={{
+            base: "200px",
+            md: "230px",
+          }}
           colSpan={{
-            md: 5,
-            lg: 4,
+            base: 1,
+            md: 4,
+            lg: 5,
           }}
         >
           <PhotoSwiper photoUrls={photoUrls} roomName={roomName} />
@@ -60,31 +94,46 @@ export const MeetingRoomItem = ({
 
         <GridItem
           colSpan={{
-            md: 7,
-            lg: 8,
+            base: 1,
+            md: 8,
+            lg: 7,
+          }}
+          p={{
+            base: "0px 1rem 1rem",
+            md: "0",
           }}
         >
-          <Box>
-            <Text fontWeight={700} fontSize="1.25rem" mb="8px">
-              L{floor}, Room {roomName}
+          <Text fontWeight={700} fontSize="1.25rem" mb="8px">
+            L{floor}, Room {roomName}
+          </Text>
+          <HStack
+            lineHeight={"1.75"}
+            mb={{
+              base: "0.25rem",
+              md: "2px",
+            }}
+          >
+            <Icon color="fg.navy" w="18px">
+              <UsersIcon />
+            </Icon>
+            <Text color="fg.muted">{capacity} Seats</Text>
+          </HStack>
+          <HStack>
+            <Icon color="fg.navy" w="18px">
+              <DollarSignIcon />
+            </Icon>
+            <Text color="fg.muted">
+              {currencyCode} {formatPrice(hourlyPrice, currencyCode)} / hour
             </Text>
-            <HStack lineHeight={"1.75"} mb="2px">
-              <Icon color="fg.navy" w="18px">
-                <UsersIcon />
-              </Icon>
-              <Text color="fg.muted">{capacity} Seats</Text>
-            </HStack>
-            <HStack>
-              <Icon color="fg.navy" w="18px">
-                <DollarSignIcon />
-              </Icon>
-              <Text color="fg.muted">
-                {currencyCode} {formatPrice(hourlyPrice, currencyCode)} / hour
-              </Text>
-            </HStack>
-            <Box mt="0.75rem">
-              <AmenitiesList amenities={amenities} />
-            </Box>
+          </HStack>
+          <Box
+            mt="0.75rem"
+            display={{
+              base: "none",
+              md: "block",
+            }}
+          >
+            <AmenitiesList amenities={amenities} />
           </Box>
         </GridItem>
       </a>
