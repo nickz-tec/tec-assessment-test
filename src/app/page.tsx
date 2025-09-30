@@ -25,7 +25,13 @@ const Home = async ({
   const params = await searchParams;
 
   const citiesResponse = await tecApi.call<GetCitiesResponse>(
-    "/core-api/api/v1/cities?pageSize=100"
+    "/core-api/api/v1/cities?pageSize=100",
+    {
+      next: {
+        revalidate: 36000,
+        tags: ["cities"],
+      },
+    }
   );
 
   const cities = citiesResponse.items.map((city) => ({
