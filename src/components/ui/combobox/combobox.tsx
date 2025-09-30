@@ -72,6 +72,7 @@ export const Combobox = ({
             <SearchBox
               collection={collection}
               inputValue={inputValue}
+              value={value}
               onValueChange={(value) => {
                 onValueChange(value);
                 setOpen(false);

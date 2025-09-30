@@ -9,11 +9,13 @@ import { ComboboxItem } from "./types";
 import { SearchIcon } from "lucide-react";
 
 export const SearchBox = ({
+  value,
   collection,
   inputValue,
   onInputChange,
   onValueChange,
 }: {
+  value: string;
   inputValue: string;
   onInputChange: (value: string) => void;
   collection: ListCollection<ComboboxItem>;
@@ -25,6 +27,7 @@ export const SearchBox = ({
       overflow={"hidden"}
       borderRadius={"0"}
       gap="0"
+      value={[value]}
       onValueChange={(e) => onValueChange(e.value[0])}
     >
       <InputGroup
