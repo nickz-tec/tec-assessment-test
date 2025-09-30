@@ -23,6 +23,7 @@ export const PhotoSwiper = ({ photoUrls, roomName }: Props) => {
         w="100%"
         h="100%"
         objectFit="cover"
+        bg="blue.5"
         src={photoUrls[0]}
       />
     );
@@ -53,6 +54,7 @@ export const PhotoSwiper = ({ photoUrls, roomName }: Props) => {
               h="100%"
               objectFit="cover"
               display="block"
+              bg="blue.5"
             />
           </SwiperSlide>
         ))}
