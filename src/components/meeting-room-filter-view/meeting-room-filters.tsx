@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
+
 import { DatePicker } from "../ui/date-picker/date-picker";
 import { Select } from "../ui/select";
 
-import { Flex, Box } from "@chakra-ui/react";
+import { Box, Button, Grid, GridItem, Icon } from "@chakra-ui/react";
 import { Combobox } from "../ui/combobox";
 import { FilterValues } from "@/lib/types";
 import {
@@ -13,7 +15,7 @@ import {
 } from "@/lib/filters";
 import { seatsOptions } from "./seats-options";
 import { isBefore, isAfter, set, startOfDay, addDays } from "date-fns";
-import { MapPinIcon, UsersIcon } from "lucide-react";
+import { MapPinIcon, UsersIcon, PlusIcon, MinusIcon } from "lucide-react";
 import { Field } from "../ui/field";
 import { Checkbox } from "../ui/checkbox";
 
@@ -32,6 +34,8 @@ export const MeetingRoomFilters = ({
   values: FilterValues;
   updateFilter: (setter: (old: FilterValues) => FilterValues) => void;
 }) => {
+  const [showMore, setShowMore] = useState(false);
+
   // Generate slots for the selected day while enforcing nextAvailableSlot as the earliest selectable time.
   const slots = generateTimeSlots(startOfDay(values.startDate), 30).filter(
     (time) => !isBefore(time, nextAvailableSlot)
@@ -128,54 +132,109 @@ export const MeetingRoomFilters = ({
     : today;
 
   return (
-    <Box position={"sticky"} top={0} bg="white" pt="1.5rem" zIndex={100}>
-      <Flex gap={2}>
-        <Field label="Date">
-          <DatePicker
-            date={values.startDate}
-            onSelect={handleDayChange}
-            disabledBefore={disabledBefore}
-          />
-        </Field>
+    <Box
+      position={"sticky"}
+      top={0}
+      bg="white"
+      pt="1.5rem"
+      zIndex={100}
+      pb="0.5rem"
+    >
+      <Grid
+        templateColumns="repeat(12, minmax(0, 1fr))"
+        templateRows="auto"
+        gap={{ base: "0.75rem", md: "0.375rem" }}
+        mb="0.25rem"
+      >
+        <GridItem colSpan={{ base: 12, md: 3 }}>
+          <Field label="Date">
+            <DatePicker
+              date={values.startDate}
+              onSelect={handleDayChange}
+              disabledBefore={disabledBefore}
+            />
+          </Field>
+        </GridItem>
 
-        <Field label="Start Time">
-          <Select
-            items={startTimeOptions}
-            value={values.startDate.toISOString()}
-            onValueChange={handleStartTimeChange}
-            placeholder="Select time"
-          />
-        </Field>
-        <Field label="End Time">
-          <Select
-            items={endTimeOptions}
-            value={values.endDate.toISOString()}
-            onValueChange={handleEndTimeChange}
-            placeholder="Select time"
-          />
-        </Field>
-        <Field label="Seats">
-          <Select
-            items={seatsOptions}
-            value={values.seats.toString()}
-            onValueChange={handleSeatsChange}
-            placeholder="Select seats"
-            icon={<UsersIcon />}
-          />
-        </Field>
-        {/* TODO: Add fuzzy search */}
+        <GridItem colSpan={{ base: 6, md: 2 }}>
+          <Field label="Start Time">
+            <Select
+              items={startTimeOptions}
+              value={values.startDate.toISOString()}
+              onValueChange={handleStartTimeChange}
+              placeholder="Select time"
+            />
+          </Field>
+        </GridItem>
 
-        <Field label="City">
-          <Combobox
-            items={cityOptions}
-            value={values.cityCode}
-            onValueChange={handleCityChange}
-            placeholder="Select city"
-            groupSort={(a, b) => a.localeCompare(b)}
-            icon={<MapPinIcon />}
+        <GridItem colSpan={{ base: 6, md: 2 }}>
+          <Field label="End Time">
+            <Select
+              items={endTimeOptions}
+              value={values.endDate.toISOString()}
+              onValueChange={handleEndTimeChange}
+              placeholder="Select time"
+            />
+          </Field>
+        </GridItem>
+
+        <GridItem
+          colSpan={{ base: 6, md: 2 }}
+          display={{ base: showMore ? "block" : "none", md: "block" }}
+        >
+          <Field label="Seats">
+            <Select
+              items={seatsOptions}
+              value={values.seats.toString()}
+              onValueChange={handleSeatsChange}
+              placeholder="Select seats"
+              icon={<UsersIcon />}
+            />
+          </Field>
+        </GridItem>
+
+        <GridItem
+          colSpan={{ base: 6, md: 3 }}
+          display={{ base: showMore ? "block" : "none", md: "block" }}
+        >
+          <Field label="City">
+            {/* TODO: Add fuzzy search */}
+            <Combobox
+              items={cityOptions}
+              value={values.cityCode}
+              onValueChange={handleCityChange}
+              placeholder="Select city"
+              groupSort={(a, b) => a.localeCompare(b)}
+              icon={<MapPinIcon />}
+            />
+          </Field>
+        </GridItem>
+      </Grid>
+      <Box
+        display={{
+          md: "none",
+        }}
+        mb="0.25rem"
+      >
+        <Button
+          size="sm"
+          h="24px"
+          px="0px"
+          variant="plain"
+          justifyContent="flex-start"
+          onClick={() => setShowMore((prev) => !prev)}
+          color={"fg.blue"}
+          fontSize="1rem"
+          gap="0.375rem"
+        >
+          {showMore ? "Show Less" : "Show More"}
+          <Icon
+            as={showMore ? MinusIcon : PlusIcon}
+            boxSize={4}
+            color="fg.blue"
           />
-        </Field>
-      </Flex>
+        </Button>
+      </Box>
       <Checkbox
         label="Video Conference (Additional cost may apply)"
         checked={values.isVC}
