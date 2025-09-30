@@ -1,5 +1,6 @@
-import { Container } from "@chakra-ui/react";
+import { Box, Container, GridItem, SimpleGrid } from "@chakra-ui/react";
 import { headers } from "next/headers";
+import Image from "next/image";
 import tecApi from "@/server/tec-api-client";
 import {
   createDefaultValues,
@@ -44,15 +45,39 @@ const Home = async ({
   const defaultValues = createDefaultValues(nextAvailableSlot, userCityCode);
 
   return (
-    <Container px="2rem" pt="1.5rem" maxW="1440px" pb="4rem">
-      <MeetingRoomFilterView
-        cities={cities}
-        nextAvailableSlot={nextAvailableSlot}
-        initialValue={{
-          ...defaultValues,
-          ...extractedFilters,
-        }}
-      />
+    <Container px="2rem" maxW="1440px" pb="4rem">
+      <SimpleGrid
+        columns={{ base: 1, lg: 12 }}
+        gap="1.25rem"
+        alignItems="start"
+      >
+        <GridItem pt="1.5rem" colSpan={{ base: 1, lg: 8, xl: 7 }}>
+          <MeetingRoomFilterView
+            cities={cities}
+            nextAvailableSlot={nextAvailableSlot}
+            initialValue={{
+              ...defaultValues,
+              ...extractedFilters,
+            }}
+          />
+        </GridItem>
+        <GridItem
+          colSpan={{ base: 1, lg: 4, xl: 5 }}
+          position="sticky"
+          top="0px"
+        >
+          <Box position="relative" h="100vh">
+            <Image
+              src="/map-placeholder.png"
+              alt="Map placeholder"
+              fill
+              style={{ objectFit: "cover" }}
+              sizes="(min-width: 62em) 33vw, 100vw"
+              priority
+            />
+          </Box>
+        </GridItem>
+      </SimpleGrid>
     </Container>
   );
 };
