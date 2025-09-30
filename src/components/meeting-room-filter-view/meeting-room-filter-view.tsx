@@ -17,7 +17,7 @@ type Props = {
   initialValue: FilterValues;
 };
 
-export const MeetingRoomList = ({
+export const MeetingRoomFilterView = ({
   cities,
   nextAvailableSlot,
   initialValue,

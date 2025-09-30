@@ -8,7 +8,7 @@ import {
 } from "@/lib/filters";
 import { availableSeats } from "@/lib/filters";
 import { FilterSearchParams } from "@/lib/types";
-import { MeetingRoomList } from "@/components/meeting-room-list/meeting-room-list";
+import { MeetingRoomFilterView } from "@/components/meeting-room-filter-view";
 import { GetCitiesResponse } from "@/server/tec-api-types";
 
 const Home = async ({
@@ -45,7 +45,7 @@ const Home = async ({
 
   return (
     <Box p={4}>
-      <MeetingRoomList
+      <MeetingRoomFilterView
         cities={cities}
         nextAvailableSlot={nextAvailableSlot}
         initialValue={{
