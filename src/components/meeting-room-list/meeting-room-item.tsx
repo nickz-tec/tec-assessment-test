@@ -151,6 +151,7 @@ export const MeetingRoomItem = ({
         zIndex={100}
         opacity={0}
         transition={"opacity 0.1s ease-in-out"}
+        hideBelow="md"
       >
         Select
       </Button>
