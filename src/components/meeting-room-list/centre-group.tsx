@@ -18,11 +18,9 @@ export const CentreGroup = ({
         title={centreGroupName}
         bg="blue.5"
         py="0.5rem"
-        md={{
-          pl: "2rem",
-          pr: "2rem",
-          mx: "-2rem",
-        }}
+        pl="2rem"
+        pr="2rem"
+        mx="-2rem"
         lg={{
           mx: "0",
           pl: "1rem",
