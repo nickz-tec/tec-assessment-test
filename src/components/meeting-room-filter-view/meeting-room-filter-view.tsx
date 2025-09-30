@@ -39,6 +39,10 @@ export const MeetingRoomFilterView = ({
 
   useSyncSearchParams(filterValues, cities);
 
+  const currentCity = cities.find(
+    (city) => city.code === filterValues.cityCode
+  );
+
   return (
     <Box>
       <MeetingRoomFilters
@@ -51,6 +55,12 @@ export const MeetingRoomFilterView = ({
       {isLoading && <Loader />}
 
       {isError && <ErrorState />}
+
+      {meetingRooms && currentCity && (
+        <Text fontSize={"0.875rem"}>
+          Showing {meetingRooms.length} Meeting Rooms in {currentCity.name}.
+        </Text>
+      )}
 
       {meetingRooms &&
         meetingRooms.map(({ centreGroup, rooms, groupId }) => {
