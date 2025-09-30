@@ -17,6 +17,10 @@ export const DropdownTrigger = forwardRef<HTMLButtonElement, Props>(
         p="12px 32px 12px 12px"
         borderColor={"gray.200"}
         position={"relative"}
+        outline={"none"}
+        _focus={{
+          borderColor: "blue.500",
+        }}
         _expanded={{
           borderColor: "blue.500",
         }}

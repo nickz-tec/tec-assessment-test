@@ -9,6 +9,11 @@ export const Field = ({
 }) => {
   return (
     <$Field.Root
+      _focusWithin={{
+        "& > label": {
+          color: "blue.500",
+        },
+      }}
       _hover={{
         "& > label": {
           color: "blue.500",
