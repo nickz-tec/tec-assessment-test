@@ -68,6 +68,7 @@ const Home = async ({
           />
         </GridItem>
         <GridItem
+          display={{ base: "none", lg: "block" }}
           colSpan={{ base: 1, lg: 4, xl: 5 }}
           position="sticky"
           top="0px"
