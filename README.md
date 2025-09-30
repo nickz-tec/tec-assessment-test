@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TEC Assessment Test
 
-## Getting Started
+TEC meeting room booking demo. Built with Next.js.
 
-First, run the development server:
+## Environment Variables
+
+Please add the following environment variables to the project:
+
+- `TEC_API_BASE_URL` - The base URL of the TEC API.
+- `TEC_API_ACCESS_KEY` - The access key for the TEC API.
+
+## How to run the project
+
+For development, run the following command:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+To build the project, run the following command:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Overview
 
-## Learn More
+### Stylings
 
-To learn more about Next.js, take a look at the following resources:
+The project uses Chakra UI as the base component library. Only necessary design tokens were added to the project. You can find the design tokens in the `src/components/ui/theme.ts` file.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The project uses "Roboto" as a free replacement for "Avenir".
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Server State
 
-## Deploy on Vercel
+For the sake of simplicity, no server state library was used (e.g. React Query). A in house query helper hook is used to fetch the data.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### State Management
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+No global state management solutions were used for this project. States are kept simple and uses only `useState`.
+
+### API
+
+Route handler is used to build client facing API endpoint (`/api/meeting-rooms`).
+
+### Data Caching
+
+Upstream TEC APIs are cached with reasonable assumptions.
+
+### Rendering
+
+This app uses App route and server components. The page is rendered as "Dynamic Route".
+
+## Assumptions
+
+- The project assumes daily meeting cut off time is 18:00.
+- The project _did not_ fully implement user geo detection, however some mock code is added to demonstrate how it could be implemented.
+- No custom 404 page is added. This app assumes only the main page will be visited.
+
+## Improvements
+
+- Add fuzzy search for city combobox.
