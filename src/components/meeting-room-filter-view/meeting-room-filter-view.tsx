@@ -15,6 +15,7 @@ import {
 import { MeetingRoomItem } from "../meeting-room-list/meeting-room-item";
 import { Loader } from "./loader";
 import { EmptyState } from "./empty-state";
+import { ErrorState } from "./error-state";
 
 type Props = {
   cities: {
@@ -33,7 +34,8 @@ export const MeetingRoomFilterView = ({
 }: Props) => {
   const [filterValues, setFilterValues] = useState(initialValue);
 
-  const { meetingRooms, isLoading } = useMeetingRoomsQuery(filterValues);
+  const { meetingRooms, isLoading, isError } =
+    useMeetingRoomsQuery(filterValues);
 
   useSyncSearchParams(filterValues, cities);
 
@@ -47,6 +49,8 @@ export const MeetingRoomFilterView = ({
       />
 
       {isLoading && <Loader />}
+
+      {isError && <ErrorState />}
 
       {meetingRooms &&
         meetingRooms.map(({ centreGroup, rooms, groupId }) => {

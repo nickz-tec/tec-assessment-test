@@ -10,11 +10,13 @@ export const useMeetingRoomsQuery = (filterValues: FilterValues) => {
   const [meetingRooms, setMeetingRooms] =
     useState<MeetingRoomsByCentreGroup | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     const fetchMeetingRooms = async () => {
       setIsLoading(true);
       setMeetingRooms(null);
+      setIsError(false);
 
       const p = new URLSearchParams({
         startDate: createFilterDateString(filterValues.startDate),
@@ -27,20 +29,33 @@ export const useMeetingRoomsQuery = (filterValues: FilterValues) => {
         p.set("isVC", "true");
       }
 
-      const response = await fetch(`/api/meeting-rooms?${p.toString()}`);
+      try {
+        const response = await fetch(`/api/meeting-rooms?${p.toString()}`);
 
-      // Inline type cast since this is the only instance
-      const res = (await response.json()) as {
-        success: boolean;
-        data: MeetingRoomDetails[];
-      };
+        if (!response.ok) {
+          throw new Error("Failed to fetch meeting rooms");
+        }
 
-      setMeetingRooms(groupMeetingRoomsByCentre(res.data));
-      setIsLoading(false);
+        // Inline type cast since this is the only instance
+        const res = (await response.json()) as {
+          success: boolean;
+          data: MeetingRoomDetails[];
+        };
+
+        if (!res.success) {
+          throw new Error("Meeting rooms API returned an error");
+        }
+
+        setMeetingRooms(groupMeetingRoomsByCentre(res.data));
+      } catch {
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchMeetingRooms();
   }, [filterValues]);
 
-  return { meetingRooms, isLoading };
+  return { meetingRooms, isLoading, isError };
 };
