@@ -2,6 +2,7 @@ import { formatPrice } from "@/lib/money";
 import { AmenitiesList } from "./amenities-list";
 import {
   Box,
+  Button,
   GridItem,
   HStack,
   Icon,
@@ -32,7 +33,7 @@ export const MeetingRoomItem = ({
 }: Props) => {
   return (
     <SimpleGrid
-      asChild
+      position="relative"
       columns={{
         base: 1,
         md: 12,
@@ -70,6 +71,9 @@ export const MeetingRoomItem = ({
       }}
       _hover={{
         bg: "blue.5",
+        "& #select-button": {
+          opacity: 1,
+        },
       }}
       css={{
         "& + &": {
@@ -77,66 +81,79 @@ export const MeetingRoomItem = ({
         },
       }}
     >
-      <a>
-        <GridItem
-          height={{
-            base: "200px",
-            md: "230px",
-          }}
-          colSpan={{
-            base: 1,
-            md: 4,
-            lg: 5,
-          }}
-        >
-          <PhotoSwiper photoUrls={photoUrls} roomName={roomName} />
-        </GridItem>
+      <GridItem
+        height={{
+          base: "200px",
+          md: "230px",
+        }}
+        colSpan={{
+          base: 1,
+          md: 4,
+          lg: 5,
+        }}
+      >
+        <PhotoSwiper photoUrls={photoUrls} roomName={roomName} />
+      </GridItem>
 
-        <GridItem
-          colSpan={{
-            base: 1,
-            md: 8,
-            lg: 7,
-          }}
-          p={{
-            base: "0px 1rem 1rem",
-            md: "0",
+      <GridItem
+        colSpan={{
+          base: 1,
+          md: 8,
+          lg: 7,
+        }}
+        p={{
+          base: "0px 1rem 1rem",
+          md: "0",
+        }}
+      >
+        <Text fontWeight={700} fontSize="1.25rem" mb="8px">
+          L{floor}, Room {roomName}
+        </Text>
+        <HStack
+          lineHeight={"1.75"}
+          mb={{
+            base: "0.25rem",
+            md: "2px",
           }}
         >
-          <Text fontWeight={700} fontSize="1.25rem" mb="8px">
-            L{floor}, Room {roomName}
+          <Icon color="fg.navy" w="18px">
+            <UsersIcon />
+          </Icon>
+          <Text color="fg.muted">{capacity} Seats</Text>
+        </HStack>
+        <HStack>
+          <Icon color="fg.navy" w="18px">
+            <DollarSignIcon />
+          </Icon>
+          <Text color="fg.muted">
+            {currencyCode} {formatPrice(hourlyPrice, currencyCode)} / hour
           </Text>
-          <HStack
-            lineHeight={"1.75"}
-            mb={{
-              base: "0.25rem",
-              md: "2px",
-            }}
-          >
-            <Icon color="fg.navy" w="18px">
-              <UsersIcon />
-            </Icon>
-            <Text color="fg.muted">{capacity} Seats</Text>
-          </HStack>
-          <HStack>
-            <Icon color="fg.navy" w="18px">
-              <DollarSignIcon />
-            </Icon>
-            <Text color="fg.muted">
-              {currencyCode} {formatPrice(hourlyPrice, currencyCode)} / hour
-            </Text>
-          </HStack>
-          <Box
-            mt="0.75rem"
-            display={{
-              base: "none",
-              md: "block",
-            }}
-          >
-            <AmenitiesList amenities={amenities} />
-          </Box>
-        </GridItem>
-      </a>
+        </HStack>
+        <Box
+          mt="0.75rem"
+          display={{
+            base: "none",
+            md: "block",
+          }}
+        >
+          <AmenitiesList amenities={amenities} />
+        </Box>
+      </GridItem>
+      <Button
+        id="select-button"
+        position={"absolute"}
+        size="lg"
+        px="1.5rem"
+        borderRadius={"0px"}
+        bg="navy.500"
+        right={4}
+        bottom={4}
+        zIndex={100}
+        opacity={0}
+        transition={"opacity 0.1s ease-in-out"}
+      >
+        Select
+      </Button>
     </SimpleGrid>
   );
 };
