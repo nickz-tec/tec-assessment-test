@@ -20,8 +20,8 @@ export const CentreGroup = ({
         py="0.5rem"
         pl="2rem"
         pr="2rem"
-        mx="-2rem"
-        lg={{
+        mx="-1rem"
+        md={{
           mx: "0",
           pl: "1rem",
           pr: "1rem",
