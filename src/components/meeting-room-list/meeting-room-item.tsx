@@ -5,11 +5,11 @@ import {
   GridItem,
   HStack,
   Icon,
-  Image,
   SimpleGrid,
   Text,
 } from "@chakra-ui/react";
 import { DollarSignIcon, UsersIcon } from "lucide-react";
+import { PhotoSwiper } from "./photo-swiper";
 
 type Props = {
   roomName: string;
@@ -55,13 +55,7 @@ export const MeetingRoomItem = ({
             lg: 4,
           }}
         >
-          <Image
-            alt={roomName}
-            w="100%"
-            h="100%"
-            objectFit="cover"
-            src={photoUrls[0]}
-          />
+          <PhotoSwiper photoUrls={photoUrls} roomName={roomName} />
         </GridItem>
 
         <GridItem
