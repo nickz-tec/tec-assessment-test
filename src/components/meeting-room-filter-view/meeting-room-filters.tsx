@@ -128,7 +128,7 @@ export const MeetingRoomFilters = ({
     : today;
 
   return (
-    <Box>
+    <Box position={"sticky"} top={0} bg="white" pt="1.5rem" zIndex={100}>
       <Flex gap={2}>
         <Field label="Date">
           <DatePicker

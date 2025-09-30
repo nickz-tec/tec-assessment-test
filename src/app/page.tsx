@@ -45,13 +45,13 @@ const Home = async ({
   const defaultValues = createDefaultValues(nextAvailableSlot, userCityCode);
 
   return (
-    <Container px="2rem" maxW="1440px" pb="4rem">
+    <Container px="2rem" maxW="1440px">
       <SimpleGrid
         columns={{ base: 1, lg: 12 }}
         gap="1.25rem"
         alignItems="start"
       >
-        <GridItem pt="1.5rem" colSpan={{ base: 1, lg: 8, xl: 7 }}>
+        <GridItem colSpan={{ base: 1, lg: 8, xl: 7 }} pb="4rem">
           <MeetingRoomFilterView
             cities={cities}
             nextAvailableSlot={nextAvailableSlot}
