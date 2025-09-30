@@ -56,6 +56,7 @@ This app uses App route and server components. The page is rendered as "Dynamic 
 - The project assumes daily meeting cut off time is 18:00.
 - The project _did not_ fully implement user geo detection, however some mock code is added to demonstrate how it could be implemented.
 - No custom 404 page is added. This app assumes only the main page will be visited.
+- No image optimization is added as this context (cdn, image server) is not past as part of the assessment.
 
 ## Improvements
 
