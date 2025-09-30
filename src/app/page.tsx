@@ -45,7 +45,13 @@ const Home = async ({
   const defaultValues = createDefaultValues(nextAvailableSlot, userCityCode);
 
   return (
-    <Container px="2rem" maxW="1440px">
+    <Container
+      px={{
+        base: "1rem",
+        md: "2rem",
+      }}
+      maxW="1440px"
+    >
       <SimpleGrid
         columns={{ base: 1, lg: 12 }}
         gap="1.25rem"
